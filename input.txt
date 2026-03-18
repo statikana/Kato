@@ -1,0 +1,11 @@
+{
+    let a = {
+        let g = 13;
+        let b = {
+            let p = 2;
+            emit g + p;
+        };
+        emit b;
+    };
+    emit a;
+};
