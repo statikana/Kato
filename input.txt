@@ -7,5 +7,10 @@
         };
         emit b;
     };
-    emit a;
+
+    func something(x) {
+        return g + x;
+    };
+    g = 3;
+    emit something(3);
 };

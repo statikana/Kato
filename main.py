@@ -1,8 +1,8 @@
 from antlr4 import CommonTokenStream, InputStream
 
 from src.ast_visitor import ASTVisitor
-from gen.mainLexer import mainLexer
-from gen.mainParser import mainParser
+from gen.katoLexer import katoLexer
+from gen.katoParser import katoParser
 
 from src.exec_tree import exec_tree
 
@@ -10,10 +10,10 @@ file = "./input.txt"
 
 def main():
     input_stream = InputStream(open(file).read())
-    lexer = mainLexer(input_stream)
+    lexer = katoLexer(input_stream)
     stream = CommonTokenStream(lexer)
-    parser = mainParser(stream)
-    
+    parser = katoParser(stream)
+ 
     visitor = ASTVisitor()
     start = parser.program()
     tree = visitor.visit(start)

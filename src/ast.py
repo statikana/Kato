@@ -24,30 +24,42 @@ class VarGet(ASTNode):
     def __repr__(self) -> str:
         return f"Get(name={self.name})"
 
+@dataclass
+class Call(ASTNode):
+    value: ASTNode
+    args: list[ASTNode]
+
 
 @dataclass
-class BinOp:
+class FunctionDef(ASTNode):
+    name: str
+    args: list[str]
+    scope: Scope
+
+
+@dataclass
+class BinOpNode(ASTNode):
     lhs: ASTNode
     rhs: ASTNode
 
 
 @dataclass
-class OpAdd(ASTNode, BinOp):
+class OpAdd(BinOpNode):
     def __repr__(self):
         return f"Add(lhs={repr(self.lhs)}, rhs={repr(self.rhs)})"
 
 @dataclass
-class OpSub(ASTNode, BinOp):
+class OpSub(BinOpNode):
     def __repr__(self):
         return f"Sub(lhs={repr(self.lhs)}, rhs={repr(self.rhs)})"
 
 @dataclass
-class OpMul(ASTNode, BinOp):
+class OpMul(BinOpNode):
     def __repr__(self):
         return f"Mul(lhs={repr(self.lhs)}, rhs={repr(self.rhs)})"
 
 @dataclass
-class OpDiv(ASTNode, BinOp):
+class OpDiv(BinOpNode):
     def __repr__(self):
         return f"Div(lhs={repr(self.lhs)}, rhs={repr(self.rhs)})"
 
@@ -59,10 +71,10 @@ class Scope(ASTNode):
     def __repr__(self) -> str:
         return f"Scope({repr(self.body)})"
     
-class Control: pass
+class ControlNode: pass
 
 @dataclass
-class Return(ASTNode, Control):
+class Return(ASTNode, ControlNode):
     value: ASTNode
 
     def __repr__(self) -> str:
@@ -70,7 +82,7 @@ class Return(ASTNode, Control):
     
 
 @dataclass
-class IfElse(ASTNode, Control):
+class IfElse(ASTNode, ControlNode):
     condition: ASTNode
     scope_true: Scope
     scope_false: Scope | None
@@ -79,7 +91,7 @@ class IfElse(ASTNode, Control):
         return f"IfElse(if={repr(self.condition)}, then={repr(self.scope_true)}, else={repr(self.scope_false)})"
 
 @dataclass
-class Emit(ASTNode, Control):
+class Emit(ASTNode, ControlNode):
     value: ASTNode
 
     def __repr__(self):

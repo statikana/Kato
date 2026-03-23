@@ -1,15 +1,17 @@
-grammar main;
+grammar kato;
 
 program: scope;
 
-statement: (varDefinition | expr | control) ';';
+statement: (varDefinition | funcDefinition | expr | control) ';';
 
 // variable and function definitions
-varDefinition: 'let ' variable '=' expr ;
+varDefinition: 'let ' variable '=' expr;
+funcDefinition: 'func ' variable '(' (expr (',' expr)* ','?)? ')' scope;
 
 // expressions
 expr
-    : variable  #ExprVar
+    : expr '(' (expr (',' expr)* ','?)? ')' #ExprCall
+    | variable  #ExprVar
     | literal   #ExprLiteral
     | scope     #ExprScope
 
@@ -26,9 +28,10 @@ return: ('return' | ('return ' expr));
 emit: 'emit ' expr;
 
 literal
-    : sign=('+' | '-')? ((left=NUMBER+ '.' right=NUMBER*) | left=NUMBER* '.' right=NUMBER+) #NumberLiteral
-    | NUMBER+ #IntegerLiteral
-    | STRING #StringLiteral
+    : sign=('+' | '-')? ((left=NUMBER+ '.' right=NUMBER*) | left=NUMBER* '.' right=NUMBER+) #LiteralNumber
+    | NUMBER+ #LiteralInteger
+    | ('true' | 'false') #LiteralBoolean
+    | STRING #LiteralString
     ;
 
 scope: '{' statement* '}';
